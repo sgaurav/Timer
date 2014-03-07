@@ -59,7 +59,7 @@
 // }());
 
 (function() {
-	var _startTime = 0, _stopTime = 0, _start, _stop, _microseconds;
+	var _startTime = 0, _stopTime = 0, _start, _stop, _milliseconds;
 
 	window.Timer = {};
 
@@ -72,15 +72,15 @@
 	};
 
 	Timer.microseconds = function(){
-		return _microseconds();
+		return _milliseconds()*1000;
 	};
 
 	Timer.milliseconds = function(){
-		return _microseconds()/1000;
+		return _milliseconds();
 	};
 
 	Timer.seconds = function(){
-		return _microseconds/1000000;
+		return _milliseconds()/1000;
 	};
 
 	_start = function(){
@@ -96,7 +96,7 @@
 		}
 	};
 
-	_microseconds = function(){
+	_milliseconds = function(){
 		var stop = _stopTime;
 
 		if(_startTime !== 0 && stop === 0){
