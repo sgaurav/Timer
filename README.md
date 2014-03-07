@@ -1,7 +1,7 @@
 Timer
 =====
 
-Inspired from https://github.com/eligrey/timer.js, Timer is a javascript library for profiling web apps upto microsecond level.
+Inspired from https://github.com/eligrey/timer.js, Timer is a javascript library for profiling web apps upto microsecond level. Timer uses `performace.now()` to obtain precision better than usual javascript `Date.now()`.
 
 API
 =====
@@ -20,3 +20,8 @@ Returns milliseconds passed since the time when Timer was started.
 
 `Timer.seconds();`
 Returns seconds passed since the time when Timer was started.
+
+Support
+========
+
+Timer can be used in Chrome 24.0+, Firefox 15.0+, IE 10.0+ and Opera 15.0
