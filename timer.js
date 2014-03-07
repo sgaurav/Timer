@@ -1,108 +1,64 @@
 /*global Timer:false, performance:false */
 "use strict";
 
-// var Timer = Timer || (function () {
-// 	var Timer, timerPrototype,
-// 	now = Date.now || function () {
-// 		return (new Date()).getTime();
-// 	};
+(function(window) {
+	var Local = (function(window){
 
-// 	if (typeof chrome !== "undefined" && typeof chrome.Interval === "function") {
-// 		// Google Chrome has a native timer constructor
-// 		timerPrototype = (Timer = chrome.Interval).prototype;
-// 		timerPrototype.milliseconds = function () {
-// 			return this.microseconds() / 1000;
-// 		};
-// 	}
-// 	else {
-// 		timerPrototype = (Timer = function () {
-// 			var startT = 0,
-// 			stopT = 0;
-
-// 			this.start = function () {
-// 				stopT = 0;
-// 				startT = performance.now();
-// 			};
-
-// 			this.stop = function () {
-// 				stopT = now();
-// 				if (startT === 0) {
-// 					stopT = 0;
-// 				}
-// 			};
-// 			this.milliseconds = function () {
-// 				var stop = stopT;
-// 				if (stop === 0 && startT !== 0) {
-// 					stop = performance.now();
-// 				}
-// 				return stop - startT;
-// 			};
-// 		}).prototype;
-// 		timerPrototype.microseconds = function () {
-// 			return this.milliseconds() * 1000;
-// 		};
-// 	}
-// 	timerPrototype.profile = function (fn, iterations) {
-// 		if (typeof fn === "string") {
-// 			fn = new Function(fn);
-// 		}
-// 		this.start();
-// 		while (iterations--) {
-// 			fn();
-// 		}
-// 		this.stop();
-// 	};
-// 	timerPrototype.seconds = function () {
-// 		return this.milliseconds() / 1000;
-// 	};
-// 	return Timer;
-// }());
-
-(function() {
-	var _startTime = 0, _stopTime = 0, _start, _stop, _milliseconds;
-
-	window.Timer = {};
-
-	Timer.start = function(){
-		_start();
-	};
-
-	Timer.stop = function(){
-		_stop();
-	};
-
-	Timer.microseconds = function(){
-		return _milliseconds()*1000;
-	};
-
-	Timer.milliseconds = function(){
-		return _milliseconds();
-	};
-
-	Timer.seconds = function(){
-		return _milliseconds()/1000;
-	};
-
-	_start = function(){
-		_startTime = performance.now();
-		_stopTime = 0;
-	};
-
-	_stop = function(){
-		_stopTime = performance.now();
-
-		if(_startTime === 0){
-			_stopTime = 0;
-		}
-	};
-
-	_milliseconds = function(){
-		var stop = _stopTime;
-
-		if(_startTime !== 0 && stop === 0){
-			stop = performance.now();
+		function Local(){
+			this.startTime = 0;
+			this.stopTime = 0;
 		}
 
-		return stop - _startTime;
+		Local.prototype.start = function(){
+			this.startTime = performance.now();
+			this.stopTime = 0;
+		};
+
+		Local.prototype.stop = function(){
+			this.stopTime = performance.now();
+
+			if(this.startTime === 0){
+				this.stopTime = 0;
+			}
+		};
+
+		Local.prototype.milliseconds = function(){
+			var stop = this.stopTime;
+
+			if(this.startTime !== 0 && stop === 0){
+				stop = performance.now();
+			}
+
+			return stop - this.startTime;
+		};
+
+		return Local;
+	})(window);
+
+	var Timer = function Timer(){
+		Local = new Local();
 	};
-})();
+
+	Timer.prototype.start = function(){
+		Local.start();
+	};
+
+	Timer.prototype.stop = function(){
+		Local.stop();
+	};
+
+	Timer.prototype.microseconds = function(){
+		return Local.milliseconds()*1000;
+	};
+
+	Timer.prototype.milliseconds = function(){
+		return Local.milliseconds();
+	};
+
+	Timer.prototype.seconds = function(){
+		return Local.milliseconds()/1000;
+	};
+
+	var Timer = new Timer();
+	window.Timer = Timer;
+})(window);
